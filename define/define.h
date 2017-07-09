@@ -1,0 +1,6 @@
+OPTION(liyankun, int333, 8)
+OPTION(liyankun1, int333, 9)
+OPTION(liyankun2, int333, 0)
+OPTION(liyankun3, int333, (1<<10))
+OPTION(liyankun3, int333, (1<<20))
+OPTION(liyankun3, int333, (1<<30))
