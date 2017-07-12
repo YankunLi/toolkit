@@ -89,7 +89,7 @@ static int fill_file(int off, int chunck)
     }
 
     if (i < max_size) {
-        pwrite(fd, (void *)buf, max_size - i, i);
+        ret = pwrite(fd, (void *)buf, max_size - i, i);
         if (ret < 0) {
             free(buf);
             return ret;
