@@ -10,6 +10,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <memory.h>
 
 #define CHUNCK_SIZE 4096
 
@@ -48,7 +50,7 @@ static int _open_file(char *path, int mode)
         goto out_fd;
     }
 
-    max_size = st.st_size;
+    old_size = st.st_size;
     block_size = st.st_blksize;
 
     return ret;
@@ -64,7 +66,37 @@ static void _close()
 
 static int fill_file(int off, int chunck)
 {
+    int ret = 0;
+    char *buf;
+    int page_size;
 
+    page_size = getpagesize();
+
+    ret = posix_memalign((void**)&buf, page_size, chunck);
+    if (ret) {
+        return -ret;
+    }
+
+    memset((void *)buf, 0, chunck);
+
+    int i = old_size;
+    for (; i + chunck <= max_size; i += chunck) {
+        ret = pwrite(fd, (void *)buf, chunck, i);
+        if (ret < 0) {
+            free(buf);
+            return ret;
+        }
+    }
+
+    if (i < max_size) {
+        pwrite(fd, (void *)buf, max_size - i, i);
+        if (ret < 0) {
+            free(buf);
+            return ret;
+        }
+    }
+
+    return 0;
 }
 
 extern int resize_file(char *path, int size, int fill)
@@ -72,25 +104,24 @@ extern int resize_file(char *path, int size, int fill)
     int ret;
     int mode = 0644;
 
+    max_size = size;
     ret = _open_file(path, mode);
     if (ret < 0) {
         fprintf(stderr, "_open_file unable to open file %s", path);
         return -ret;
     }
 
-    struct stat st;
-    ret = fstat(fd, &st);
+/*    ret = fstat(fd, &st);
     if (ret) {
         ret = errno;
         fprintf(stderr, "unable to fstat %s file", path);
         ret = -ret;
         goto out_fd;
-    }
-    if (st.st_size > size) {
+    } */
+    if (max_size < old_size) {
         fprintf(stderr, "Currently, The size of file is %d <  %d, some data will be lost",
-                st.st_size, size);
+                old_size, size);
     }
-    old_size = st.st_size;
 
     ret = ftruncate(fd, size);
     if (ret < 0) {
