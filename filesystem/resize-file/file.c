@@ -79,7 +79,7 @@ static int fill_file(int off, int chunck)
 
     memset((void *)buf, 0, chunck);
 
-    int i = old_size;
+    int i = off;
     for (; i + chunck <= max_size; i += chunck) {
         ret = pwrite(fd, (void *)buf, chunck, i);
         if (ret < 0) {
