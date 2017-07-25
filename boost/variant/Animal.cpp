@@ -3,7 +3,6 @@
  *
  */
 
-#include <string>
 #include <iostream>
 
 using namespace std;
@@ -12,7 +11,7 @@ using namespace std;
 
 Animal::Animal() {}
 
-Animal::Animal(std::string name, int age)
+Animal::Animal(string name, int age)
 {
     a_name = name;
     a_age = age;
