@@ -19,7 +19,19 @@ int main(int argc, char *argv[])
 
     Var_t v;
 
-    v = new Dog("mikle", 23);
+    Dog *d = new Dog("mikle", 23);
+    v = *d;
 
-    boost::get<Dog>(v).run();
+    Cat *c = boost::get<Cat>(&v);
+    if (!c) {
+        cout << "is not a cat" << endl;
+    }
+
+    try {
+        boost::get<Dog>(v).run();
+    } catch (boost::bad_get &) {
+        cout << "bad_get" << endl;
+    }
+
+    return 0;
 }
