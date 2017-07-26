@@ -14,7 +14,7 @@ using namespace std;
 
 typedef boost::variant<Dog, Cat> Var_t;
 
-class RunVar: public boost::static_visitor<void>
+class RunVar: public boost::static_visitor<>
 {
     public:
         void operator()(Dog& d) const {
@@ -31,10 +31,12 @@ int main(int argc, char *argv[])
     RunVar r;
     Var_t v;
 
-    v = new Cat("tom", 10);
+    Cat *a = new Cat("tom", 10);
+    a->run();
+    v = *a;
     boost::apply_visitor(r, v);
 
-    delete &boost::get<Cat>(v);
+    delete a;
 
     return 0;
 }

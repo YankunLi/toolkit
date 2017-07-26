@@ -5,6 +5,10 @@
  */
 
 #include "Dog.h"
+#include "Animal.h"
+#include <iostream>
+
+using namespace std;
 
 Dog::Dog() {}
 
