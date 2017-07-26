@@ -7,20 +7,24 @@ all: run
 
 OBJS_SRC = Dog.cpp Cat.cpp Animal.cpp variant_visitor.cpp
 
-run: Dog.o Cat.o Animal.o variant_visitor.o
+OBJS = Dog.o Cat.o Animal.o variant_visitor.o
+
+run: $(OBJS)
 	$(CC) -o $@ $^
 
-Dog.o: Dog.cpp
-	$(CC) -o $@ -c $<
+Dog.o Cat.o : Dog.h Cat.h
+#	$(CC) -o $@ -c $<
 
-Cat.o: Cat.cpp
-	$(CC) -o $@ -c $<
+#Cat.o: Cat.h
+#$(CC) -o $@ -c $<
 
-Animal.o: Animal.cpp
-	$(CC) -o $@ -c $<
+Animal.o: Animal.h
+#	$(CC) -o $@ -c $<
 
 variant_visitor.o: variant_visitor.cpp
 	$(CC) -o $@ -c $<
 
+.PHONY: clean
+
 clean:
-	$(RM) *.o run
+	-$(RM) *.o run
