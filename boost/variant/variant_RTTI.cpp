@@ -12,7 +12,8 @@ int main(int argc, char *agrv[])
 
     Var_t v;
 
-    v = new Cat();
+    Cat *c = new Cat();
+    v = *c;
 
     if (v.type() == typeid(Dog)) {
         boost::get<Dog>(v).run();
