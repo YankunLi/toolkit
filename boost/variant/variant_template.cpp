@@ -28,10 +28,11 @@ int main(int argc, char *argv[])
     RunVar r;
     Var_t v;
 
-    v = new Cat("tom", 10);
+    Cat *c = new Cat("tom", 10);
+    v = *c;
     boost::apply_visitor(r, v);
 
-    delete &boost::get<Cat>(v);
+    delete c;
 
     return 0;
 }
