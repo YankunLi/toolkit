@@ -57,5 +57,26 @@ int main(int argc, char *argv[])
             attribute short address is %lx\n ", \
             &ss1, &ss1.a, &ss1.b, &ss1.c);
 
+
+    //C __attribute__ for memory aligment
+    struct type_aligned {
+    int a;
+    char b;
+    short c;
+    } __attribute__((aligned(4)));
+
+    struct type_aligned aligned;
+    printf("The size of struct type_aligned is %d\n", sizeof(struct type_aligned));
+
+    struct type_packed {
+    int a;
+    char b;
+    short c;
+    } __attribute__((packed));
+
+    struct type_packed packed;
+    printf("The size of struct type_aligned is %d\n", sizeof(struct type_packed));
+
+
     return 0;
 }
