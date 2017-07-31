@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#pragma pack(push, 2)
+
 int main(int argc, char *argv[])
 {
     int bit = 1;
@@ -52,8 +54,6 @@ int main(int argc, char *argv[])
             attribute int address is %lx\n \
             attribute short address is %lx\n ", \
             &ss1, &ss1.a, &ss1.b, &ss1.c);
-
-
 
     return 0;
 }
