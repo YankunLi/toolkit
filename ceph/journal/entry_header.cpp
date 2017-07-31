@@ -5,11 +5,12 @@
 
 //#include <sys/types.h>
 //#include <stddef.h>
+#include <stdint.h>
 
 typedef long off64_t;
 
-typedef unsigned long long    uint64_t;
-typedef unsigned int          uint32_t;
+//typedef unsigned long long    uint64_t;
+//typedef unsigned int          uint32_t;
 
 struct entry_header_t {
     uint64_t seq;
