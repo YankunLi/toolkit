@@ -4,6 +4,7 @@
 
 int main(int argc, char *argv[])
 {
+    //the address of available and size of available
     int bit = 1;
     printf("size of int type is : %d, address is : %lx\n", sizeof(bit), &bit);
 
@@ -14,6 +15,7 @@ int main(int argc, char *argv[])
         printf("size of int type is : %d, address is : %lx\n", sizeof(a[i]), &a[i]);
     }
 
+    //effect of localtion of property in struct for total size
     struct stu {
     char sex;
     int length;
