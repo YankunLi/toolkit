@@ -1,39 +1,39 @@
 #include <iostream>
 #include <string>
-#include <assert.h>    
+#include <assert.h>
 #include <leveldb/db.h>
 #include <leveldb/write_batch.h>
 
 using namespace std;
 
-int main(void) 
-{       
+int main(void)
+{
 
-    leveldb::DB      *db;    
-    leveldb::Options  options;    
+    leveldb::DB      *db;
+    leveldb::Options  options;
     options.create_if_missing = true;
 
     // open A leveldb database has a name which corresponds to a file system directory
-    leveldb::Status status = leveldb::DB::Open(options,"/tmp/testdb", &db);    
-    assert(status.ok());    
+    leveldb::Status status = leveldb::DB::Open(options,"/tmp/testdb", &db);
+    assert(status.ok());
 
-    string key = "liyankun";    
-    string value = "handsome";    
+    string key = "liyankun";
+    string value = "handsome";
 
     // write
-    status = db->Put(leveldb::WriteOptions(), key, value);  
+    status = db->Put(leveldb::WriteOptions(), key, value);
     assert(status.ok());
 
     // read
-    status = db->Get(leveldb::ReadOptions(), key, &value);    
-    assert(status.ok());    
+    status = db->Get(leveldb::ReadOptions(), key, &value);
+    assert(status.ok());
 
-    cout<<value<<endl;    
+    cout<<value<<endl;
 
     // delete
-//    status = db->Delete(leveldb::WriteOptions(), key);    
+//    status = db->Delete(leveldb::WriteOptions(), key);
 //    assert(status.ok());
-   
+
     leveldb::Iterator *it = db->NewIterator(leveldb::ReadOptions());
     for ( it->SeekToFirst(); it->Valid(); it->Next() ){
         cout << it->key().ToString() << ":" << it->value().ToString() <<endl;
@@ -41,14 +41,14 @@ int main(void)
     assert(it->status().ok());
     delete it;
 
-    status = db->Get(leveldb::ReadOptions(),key, &value);    
+    status = db->Get(leveldb::ReadOptions(),key, &value);
     if(!status.ok()) {
         cerr<<key<<"    "<<status.ToString()<<endl;
     } else {
-        cout<<key<<"==="<<value<<endl;    
-    }   
+        cout<<key<<"==="<<value<<endl;
+    }
 
-    //The following variation shows how to process just the keys in the range [start,limit): 
+    //The following variation shows how to process just the keys in the range [start,limit):
     /*for (it->Seek(start);
        it->Valid() && it->key().ToString() < limit;
        it->Next()) {
@@ -82,5 +82,5 @@ int main(void)
     // close
     delete db;
 
-    return 0;   
+    return 0;
 }
