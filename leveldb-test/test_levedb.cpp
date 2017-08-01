@@ -4,7 +4,67 @@
 #include <leveldb/db.h>
 #include <leveldb/write_batch.h>
 
+#include <sys/stat.h>
+#include <unistd.h>
+
 using namespace std;
+
+class KVOptions {
+    private:
+        leveldb::Options kv_options;
+
+    public:
+        KVOptions() {};
+        virtual ~KVOptions(){};
+
+        friend class KVDB;
+};
+
+class KVDB {
+    private:
+        leveldb::DB *kv_db;
+
+    public:
+        KVDB() {}
+        virtual ~KVDB() {
+            if (kv_db)
+                delete kv_db;
+        };
+
+        struct Status {
+            leveldb::Status status;
+
+            bool is_ok() {
+                if (status.ok())
+                    return true;
+                else
+                    return false;
+            }
+        };
+typedef struct Status ret_t;
+
+        static KVDB* create(KVOptions *options, const string path_db, string kv_type) {
+            if (kv_type == "leveldb") {
+                struct stat state;
+                int ret = stat(path_db.c_str(), &state);
+                if (ret < 0)
+                    return NULL;
+                if (S_ISREG(state.st_mode) < 0)
+                    return NULL;
+
+                KVDB *db = new KVDB();
+                leveldb::Status status;
+                status = leveldb::DB::Open(options->kv_options, path_db, &db->kv_db);
+                if (status.ok())
+                    return db;
+                return NULL;
+            }
+        }
+
+        ret_t put() {}
+        ret_t get() {}
+        ret_t batch_put() {}
+};
 
 int main(void)
 {
