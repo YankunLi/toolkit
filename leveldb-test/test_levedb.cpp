@@ -49,7 +49,7 @@ typedef struct Status ret_t;
                 int ret = stat(path_db.c_str(), &state);
                 if (ret < 0)
                     return NULL;
-                if (S_ISREG(state.st_mode) < 0)
+                if (S_ISDIR(state.st_mode) < 0)
                     return NULL;
 
                 KVDB *db = new KVDB();
