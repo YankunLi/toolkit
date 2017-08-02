@@ -15,5 +15,7 @@ main.o: main.c
 daemon.o: daemon.c
 	$(CC) -o $@ -c $<
 
+.PHONY: clean
+
 clean:
 	$(RM)  *.o run
