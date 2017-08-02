@@ -6,8 +6,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <signal.h>
 
-int daemon(int no_ch_dir, int no_close_fd) {
+int init_daemon(int no_ch_dir, int no_close_fd) {
     //create child process
     int pid = fork();
 
@@ -38,6 +40,9 @@ int daemon(int no_ch_dir, int no_close_fd) {
         dup2(fd, STDERR_FILENO);
     }
 
+    umask(0);
+
     //handle signal
+    signal(SIGCHLD, SIG_IGN);
     return 0;
 }
