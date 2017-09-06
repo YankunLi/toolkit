@@ -54,18 +54,19 @@ struct  pool_thread_t {
 
 void work(long t_id)
 {
-    char content_byte[4094];
+    char content_byte[4096 * 16];
     int fd;
     char file_name[32];
-    char path_name[64];
+    char path_name[128];
     unsigned long long total_size;
     struct statfs disk_info;
     int parent_path_length;
+    int ret;
 
    // strcpy(path_name, PATH);
-    snprintf(path_name, 64, "%s/%d/", PATH, t_id);
-    parent_path_length = sizeof(path_name);
-    memset(content_byte, '0', 4096);
+    snprintf(path_name, 64, "%s%ld/\0", PATH, t_id);
+    parent_path_length = strlen(path_name);
+    memset(content_byte, '0', 4096 * 16);
     mkdir(path_name, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
 
 redo:
@@ -82,7 +83,9 @@ redo:
 
     fd = open(path_name, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
 
-    write(fd, content_byte, sizeof(content_byte));
+    ret = write(fd, content_byte, sizeof(content_byte));
+    fsync(fd);
+    //fdatasync(fd);
 
     close(fd);
 
@@ -94,7 +97,7 @@ out:
 
 void entry()
 {
-    long tid;
+    pthread_t tid;
     tid = pthread_self();
 
     work(tid);
@@ -169,7 +172,7 @@ void init_thread_pool(struct pool_thread_t *p_info, int thread_num)
 
 struct pool_thread_t g_tpool_info = {
     .pt_run_count = 0,
-    .pt_max_size = 2,
+    .pt_max_size = 1000,
     .pt_min_size = 1,
     .pt_threads_num = 0,
 
@@ -183,7 +186,7 @@ struct pool_thread_t g_tpool_info = {
 
 int main(int argc, char *argv[])
 {
-    g_tpool_info.pt_init(&g_tpool_info, 2);
+    g_tpool_info.pt_init(&g_tpool_info, 100);
     g_tpool_info.pt_start(&g_tpool_info);
     sleep(100);
     return 0;
