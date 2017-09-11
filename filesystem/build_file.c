@@ -43,6 +43,8 @@ struct  pool_thread_t {
     int pt_min_size;
     int pt_threads_num;
     int pt_build_thread_error;
+    int pt_stop_pool;
+    unsigned long pt_loop_interval;
 
     void (*pt_start) (struct pool_thread_t *);
     void (*pt_stop) (struct pool_thread_t *);
@@ -74,7 +76,7 @@ redo:
     total_size = disk_info.f_bsize * disk_info.f_bfree;
     total_size = total_size >> 30;
 
-    if (total_size < 5)
+    if (total_size < 18)
         goto out;
 
     path_name[parent_path_length] = '\0';
@@ -139,7 +141,15 @@ void stop_thread_pool(struct pool_thread_t *p_info)
 {}
 
 void wait_threads(struct pool_thread_t *p_info)
-{}
+{
+    int i = 0;
+    while (p_info->pt_run_count > 0) {
+        pthread_join(p_info->pt_array[i].it_tid, NULL);
+        p_info->pt_run_count--;
+    }
+
+    free((void *) p_info->pt_array);
+}
 
 void init_thread_pool(struct pool_thread_t *p_info, int thread_num)
 {
@@ -186,8 +196,9 @@ struct pool_thread_t g_tpool_info = {
 
 int main(int argc, char *argv[])
 {
-    g_tpool_info.pt_init(&g_tpool_info, 100);
+    g_tpool_info.pt_init(&g_tpool_info, 50);
     g_tpool_info.pt_start(&g_tpool_info);
-    sleep(100);
+    g_tpool_info.pt_wait(&g_tpool_info);
+ //   sleep(10000);
     return 0;
 }
