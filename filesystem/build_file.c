@@ -170,6 +170,9 @@ void stop_thread_pool(struct pool_thread_t *p_info)
     clear_thread_pool(p_info);
 }
 
+void pause_thread_pool()
+{}
+
 void init_thread_pool(struct pool_thread_t *p_info, int thread_num)
 {
     if (thread_num <= 0 || p_info->pt_max_size < p_info->pt_min_size
