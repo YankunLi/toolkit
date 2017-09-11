@@ -23,10 +23,15 @@ extern void destroy_thread_pool()
 extern void start_thread_pool(){}
 static void *run_thread()
 {}
-extern void clear_thread_pool()
-{
 
+extern void clear_thread_pool(struct thread_pool_t *tp_p)
+{
+    if (tp_p->tp_thread_array && tp_p) {
+        void *p = (void *) tp_p->tp_thread_array;
+        free(p);
+    }
 }
+
 extern void stop_thread_pool()
 {}
 extern void pause_thread_pool()

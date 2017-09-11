@@ -23,10 +23,10 @@ extern void entry();
 extern void destroy_thread_pool();
 extern void start_thread_pool();
 static void *run_thread();
-extern void clear_thread_pool();
+extern void clear_thread_pool(struct thread_pool_t *);
 extern void stop_thread_pool();
 extern void pause_thread_pool();
-extern int init_thread_pool();
+extern int init_thread_pool(struct thread_pool_t *, int);
 
 
 #endif
