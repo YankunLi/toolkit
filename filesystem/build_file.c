@@ -137,8 +137,17 @@ void * run_thread()
     entry();
 }
 
-void stop_thread_pool(struct pool_thread_t *p_info)
-{}
+static int clear_thread_pool(struct pool_thread_t *p_info)
+{
+    if (!p_info && p_info->pt_array) {
+        return 0;
+    }
+
+    void *p = (void *) p_info->pt_array;
+    free(p);
+
+    return 0;
+}
 
 void wait_threads(struct pool_thread_t *p_info)
 {
@@ -148,7 +157,17 @@ void wait_threads(struct pool_thread_t *p_info)
         p_info->pt_run_count--;
     }
 
-    free((void *) p_info->pt_array);
+    clear_thread_pool(p_info);
+}
+
+void stop_thread_pool(struct pool_thread_t *p_info)
+{
+    if (!p_info->pt_stop_pool) {
+        p_info->pt_stop_pool = 1;
+    }
+
+    wait_threads(p_info);
+    clear_thread_pool(p_info);
 }
 
 void init_thread_pool(struct pool_thread_t *p_info, int thread_num)
