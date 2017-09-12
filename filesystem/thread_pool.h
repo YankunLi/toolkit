@@ -15,11 +15,11 @@ struct thread_pool_t {
     int tp_stop_pool;
     unsigned long tp_loop_interval;
 
-    void (*tp_work)();
+    void * (*tp_work)();
 };
 
 
-extern void entry();
+static void entry();
 extern void destroy_thread_pool();
 extern void start_thread_pool();
 static void *run_thread();

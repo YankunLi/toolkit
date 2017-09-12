@@ -16,13 +16,30 @@
 
 static struct thread_pool_t *tp_ptr = NULL;
 
-extern void entry()
-{}
 extern void destroy_thread_pool()
 {}
 extern void start_thread_pool(){}
+
+static void entry(struct thread_pool_t *tp_p)
+{
+    int err;
+    int i;
+redo:
+    for (i = 0; i < tp_p->tp_threads_num; i++) {
+        err = pthread_create(&tp_p->tp_thread_array[i].ti_tid,
+                NULL, tp_p->tp_work, NULL);
+        if (err == EAGAIN)
+            goto redo;
+        else if (err == 0)
+            tp_p->tp_run_count++;
+        else
+            tp_p->tp_build_thread_errno++;
+    }
+}
+
 static void *run_thread()
-{}
+{
+}
 
 extern void clear_thread_pool(struct thread_pool_t *tp_p)
 {
@@ -34,6 +51,7 @@ extern void clear_thread_pool(struct thread_pool_t *tp_p)
 
 extern void stop_thread_pool()
 {}
+
 extern void pause_thread_pool()
 {}
 
