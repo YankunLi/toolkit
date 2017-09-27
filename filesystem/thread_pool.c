@@ -18,7 +18,16 @@ static struct thread_pool_t *tp_ptr = NULL;
 
 extern void destroy_thread_pool()
 {}
-extern void start_thread_pool(){}
+extern void start_thread_pool(struct thread_pool_t *tp_p) {
+    if (tp_p)
+        return -1;
+
+    while (!tp_p->tp_stop_pool) {
+        if (tp_p->tp_run_count < tp_p->tp_threads_num) {
+            err = run_thread(tp_p);
+            if 
+    }
+}
 
 static void entry(struct thread_pool_t *tp_p)
 {

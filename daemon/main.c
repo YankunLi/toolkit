@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
     while (1) {
         count++;
-        if (10 < count)
+        if (1000000 < count)
             break;
 
         snprintf(buf, 1024, "number: %d, runtime log\n", count);
